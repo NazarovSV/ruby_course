@@ -15,7 +15,9 @@ elsif discriminant == 0
   root = (-coefficient_b + Math.sqrt(discriminant))/ (2 * coefficient_a)
   puts "Дискриминант равен #{discriminant}. Корень равен #{root}"
 else
-  root_x1 = (-coefficient_b + Math.sqrt(discriminant))/ (2 * coefficient_a)
-  root_x2 = (-coefficient_b - Math.sqrt(discriminant))/ (2 * coefficient_a)
+  discriminant_sqrt = Math.sqrt(discriminant)
+  denominator = 2 * coefficient_a
+  root_x1 = (-coefficient_b + discriminant_sqrt)/ denominator
+  root_x2 = (-coefficient_b - discriminant_sqrt)/ denominator
   puts "Дискриминант равен #{discriminant}. Первый корень равен #{root_x1}, второй корень равен #{root_x2}"
 end
