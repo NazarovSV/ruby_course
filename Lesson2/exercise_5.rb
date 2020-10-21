@@ -37,4 +37,3 @@ day_of_current_year = day
 end
 
 puts "Порядковый номер даты - #{day_of_current_year}"
-

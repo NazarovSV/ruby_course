@@ -1,8 +1,9 @@
-vowels = Hash.new
+result = {}
+vowels = %w[a e i o u]
 
 alphabet = ('a'..'z').to_a
 alphabet.each  do |char|
-  if char == 'a' || char == 'e' || char == 'i' || char == "o" || char == "u"
-    vowels[char] = alphabet.find_index(char) + 1
+  if vowels.include? char
+    result[char] = alphabet.find_index(char) + 1
   end
 end
