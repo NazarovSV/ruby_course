@@ -13,12 +13,20 @@ class Train
     @wagons = []
     @speed = 0
     @move = {back: -1, forward: 1}
+    validate!
     @@trains[number] = self
     register_instance
   end
 
   def self.find(number)
     @@trains[number]
+  end
+
+  def valid?
+    validate!
+    true
+  rescue
+    false
   end
 
   def add_speed(speed)
@@ -66,14 +74,14 @@ class Train
   # то само добавление вагонов можно скрыть и использовать в дочерних классах через super после того как
   # будут проведены соответствующие проверки в дочерних классах(в каждом своя реализоация)
   def attach_a_wagon(wagon)
-    if train_is_standing
+    if train_is_standing?
       @wagons.push wagon
     end
   end
 
   #ситуация аналогично добавлению вагона
   def detach_a_wagon(wagon)
-    if train_is_standing && @wagons.any?
+    if train_is_standing? && @wagons.any?
       @wagons.delete wagon
     end
   end
@@ -91,8 +99,14 @@ class Train
 
   #вынесено в private т.к. методы attach_a_wagon и detach_a_wagon реализованы на уровне родительского класса,
   #и в классах потомках не требуется вызов этого метода
-  def train_is_standing
+  def train_is_standing?
     @speed == 0
+  end
+
+  NUMBER_FORMAT = /^[а-яa-z0-9]{3}-?[a-z0-9]{2}$/i
+
+  def validate!
+    raise "Не корректный номер поезда" unless @number =~ NUMBER_FORMAT
   end
 
 end

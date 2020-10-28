@@ -11,11 +11,20 @@ class Station
   def initialize(name)
     @name = name
     @trains = []
+    validate!
     @@stations.push self
     register_instance
   end
 
+  def valid?
+    validate!
+    true
+  rescue
+    false
+  end
+
   def set_train_for_station(train)
+    validate_train_type! train
     @trains.push train
   end
 
@@ -24,13 +33,21 @@ class Station
   end
 
   def trains_by_type(type)
-    count = 0
+    validate_train_type! type
     @trains.count { |train| train.class == type }
-    count
   end
   
   def self.all
     @@stations
+  end
+
+  private
+  def validate!
+    raise 'Название станции должно быть типа string' if @name.class != String
+  end
+
+  def validate_train_type!(type)
+    raise 'Tип не является наследником типа Train' if type.class.superclass != Train
   end
 
 end
