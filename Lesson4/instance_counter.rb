@@ -7,15 +7,11 @@ module InstanceCounter
     base.extend ClassMethods
   end
 
-  #@@Counter = 0
-
   module ClassMethods
     include Counter
 
-    #@@Counter = 0
-
-    def Instances
-      @@Counter[self]
+    def instances
+      @@counter[self]
     end
 
   end
@@ -25,11 +21,8 @@ module InstanceCounter
 
     protected
     def register_instance
-      if @@Counter.has_key? self.class
-        @@Counter[self.class] += 1
-      else
-        @@Counter[self.class] = 1
-      end
+        @@counter[self.class] ||= 0
+        @@counter[self.class] += 1
     end
 
   end

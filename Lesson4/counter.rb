@@ -1,3 +1,3 @@
 module Counter
-  @@Counter = {}
+  @@counter = {}
 end

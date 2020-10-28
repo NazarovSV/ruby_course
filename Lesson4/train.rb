@@ -4,7 +4,7 @@ require_relative 'instance_counter'
 class Train
   include Producer, InstanceCounter
 
-  @@trains = []
+  @@trains = {}
 
   attr_reader :wagons, :number, :route
 
@@ -13,12 +13,12 @@ class Train
     @wagons = []
     @speed = 0
     @move = {back: -1, forward: 1}
-    @@trains.push self
+    @@trains[number] = self
     register_instance
   end
 
   def self.find(number)
-    @@trains.find { |train| train.number == number }
+    @@trains[number]
   end
 
   def add_speed(speed)
@@ -49,9 +49,7 @@ class Train
 
   def previous_station
     if @current_station_index - 1 >= 0
-      @route.stations[@current_station_index - 1]
-    else
-      nil
+      return @route.stations[@current_station_index - 1]
     end
   end
 

@@ -25,7 +25,7 @@ class Station
 
   def trains_by_type(type)
     count = 0
-    @trains.select { |train| count += 1 if train.class == type }
+    @trains.count { |train| train.class == type }
     count
   end
   
