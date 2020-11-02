@@ -1,0 +1,3 @@
+module Counter
+  @@counter = {}
+end
