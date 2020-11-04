@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'instance_counter'
 
 class Route
@@ -21,9 +23,7 @@ class Route
   def add_station(station, position)
     validate_inserted_station! station
     validate_number_on_the_route! position
-    unless @stations.include? station
-      @stations.insert position, station
-    end
+    @stations.insert position, station unless @stations.include? station
   end
 
   def remove_station(station)
@@ -31,15 +31,22 @@ class Route
   end
 
   def all_stations
-    @stations.each { |station| puts station.name }
+    @stations.each(&:print_station)
   end
 
   private
 
+  def print_station(station)
+    puts station.name
+  end
+
   def validate!
     raise 'Начальная станция должна быть типа Station' unless @stations[0].is_a? Station
     raise 'Конечная станция должна быть типа Station' unless @stations[-1].is_a? Station
-    @stations[1...-1].each_with_index { |station, index| raise "#{index + 1} cтанция в пути имеет не правильный тип" if station.class != Station}
+
+    @stations[1...-1].each_with_index do |station, index|
+      raise "#{index + 1} cтанция в пути имеет не правильный тип" unless station.is_a? Station
+    end
   end
 
   def validate_inserted_station!(station)
@@ -47,8 +54,8 @@ class Route
   end
 
   def validate_number_on_the_route!(index)
-    raise "Станция должна быть между #{1} и #{@stations.length} включительно" unless index > 0 && index < @stations.length
+    return if index.positive? && index < @stations.length
+
+    raise "Станция должна быть между 1 и #{@stations.length} включительно"
   end
-
-
 end

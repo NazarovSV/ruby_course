@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'instance_counter'
 
 class Station
@@ -26,7 +28,7 @@ class Station
     false
   end
 
-  def set_train_for_station(train)
+  def add_train_for_station(train)
     validate_train_type! train
     @trains.push train
   end
@@ -47,11 +49,10 @@ class Station
   private
 
   def validate!
-    raise 'Название станции должно быть типа string' if @name.class != String
+    raise 'Название станции должно быть типа string' unless @name.is_a? String
   end
 
   def validate_train_type!(type)
-    raise 'Tип не является наследником типа Train' if type.class.superclass != Train
+    raise 'Tип не является наследником типа Train' unless type.is_a? Train
   end
-
 end

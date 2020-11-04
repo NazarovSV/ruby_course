@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require_relative 'wagon'
 
 class PassengerWagon < Wagon
-
   def initialize(number, space)
     super number, space
     validate!
@@ -16,5 +17,4 @@ class PassengerWagon < Wagon
   def validate!
     raise 'Кол-во мест должно быть числом!' unless @space.is_a? Integer
   end
-
 end

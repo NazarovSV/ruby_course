@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'producer'
 
 class Wagon
@@ -25,5 +27,4 @@ class Wagon
   def validate_operation!(space)
     raise 'Операция невозможна. В вагоне не достаточно места' if (@free_space - space).negative?
   end
-
 end

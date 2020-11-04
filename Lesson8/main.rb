@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'cargo_wagon'
 require_relative 'cargo_train'
 require_relative 'passenger_wagon'
@@ -14,7 +16,6 @@ route = Route.new mihnevo, kievskay
 
 route.add_station chertanovo, 1
 route.add_station domodedovo, 1
-
 
 cargo_wagon_first = CargoWagon.new 'A333', 10.5
 cargo_wagon_second = CargoWagon.new 'A334', 13.0
@@ -51,26 +52,32 @@ cargo_train.take_route route
   cargo_train.go_to_the_next_station
 end
 
+def print_passenger_wagon_info(wagon)
+  text = "\t\tПассажирский вагон номер \"#{wagon.number}\", свободно мест: #{wagon.free_space},"\
+  "занято мест: #{wagon.occupied_space}"
+  puts text
+end
+
+def print_cargo_wagon_info(wagon)
+  text = "\t\tГрузовой вагон номер \"#{wagon.number}\", свободно объема: #{wagon.free_space},"\
+  " занято объема: #{wagon.occupied_space}"
+  puts text
+end
+
 route.stations.each do |station|
   puts "#{station.name}:\n"
   if station.trains.count.zero?
     puts "\t-"
   else
-    var = station.execute_block do |train|
+    station.execute_block do |train|
+      wagon_case = {
+        PassengerWagon => method(:print_passenger_wagon_info),
+        CargoWagon => method(:print_cargo_wagon_info)
+      }
       puts "\t#{train.class}: номер \"#{train.number}\" кол-во вагонов - #{train.wagons.count}"
       train.execute_block do |wagon|
-        case wagon
-        when PassengerWagon
-          puts "\t\tПассажирский вагон номер \"#{wagon.number}\", свободно мест: #{wagon.free_space}, занято мест: #{wagon.occupied_space}"
-        when CargoWagon
-          puts "\t\tГрузовой вагон номер \"#{wagon.number}\", свободно объема: #{wagon.free_space}, занято объема: #{wagon.occupied_space}"
-        end
+        wagon_case[wagon.class].call wagon
       end
     end
   end
 end
-
-
-
-
-

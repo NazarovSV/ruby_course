@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Producer
   attr_reader :company_name
 
@@ -7,7 +9,8 @@ module Producer
   end
 
   protected
+
   def validate_company_name!
-    raise 'Название компании должно быть типа String' if @company_name.class != String
+    raise 'Название компании должно быть типа String' unless @company_name.is_a? String
   end
 end
