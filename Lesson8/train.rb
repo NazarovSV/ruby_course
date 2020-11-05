@@ -101,6 +101,6 @@ class Train
   NUMBER_FORMAT = /^[а-яa-z0-9]{3}-?[a-z0-9]{2}$/i.freeze
 
   def validate!
-    raise 'Не корректный номер поезда' unless @number =~ NUMBER_FORMAT
+    raise 'Не корректный номер поезда' unless NUMBER_FORMAT.match?(@number)
   end
 end
