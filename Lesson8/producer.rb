@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
+require_relative 'validation'
+
 module Producer
+  include Validation
+
   attr_reader :company_name
 
   def company_name=(name)
     @company_name = name
-    validate_company_name!
+    validate!
   end
 
-  protected
-
-  def validate_company_name!
-    raise 'Название компании должно быть типа String' unless @company_name.is_a? String
-  end
+  validate :company_name, :type, String
 end

@@ -1,21 +1,26 @@
 # frozen_string_literal: true
 
 require_relative 'train'
+require_relative 'validation'
+require_relative 'accessors'
 
 class PassengerTrain < Train
+  extend Accessors
+  include Validation
+
   def attach_a_wagon(wagon)
-    validate_type! wagon
+    self.attach_wagon = wagon
+    validate!
     super wagon
   end
 
   def detach_a_wagon(wagon)
-    validate_type! wagon
+    self.detach_wagon = wagon
+    validate!
     super wagon
   end
 
-  private
+  validate :attach_wagon, :type, PassengerWagon
 
-  def validate_type!(wagon)
-    raise 'Можно добавлять только пассажирские вагоны' unless wagon.is_a? PassengerWagon
-  end
+  strong_attr_accessor :detach_wagon, PassengerWagon
 end

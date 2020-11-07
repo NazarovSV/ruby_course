@@ -2,17 +2,21 @@
 
 require_relative 'producer'
 require_relative 'instance_counter'
+require_relative 'validation'
 
 class Train
   include InstanceCounter
   include Producer
+  include Validation
 
   @@trains = {}
 
   attr_reader :wagons, :number, :route
 
+  validate :number, :format, /^[а-яa-z0-9]{3}-?[a-z0-9]{2}$/i.freeze
+
   def initialize(number)
-    @number = number
+    self.number = number
     @wagons = []
     @speed = 0
     @move = { back: -1, forward: 1 }
@@ -27,13 +31,6 @@ class Train
 
   def self.find(number)
     @@trains[number]
-  end
-
-  def valid?
-    validate!
-    true
-  rescue StandardError
-    false
   end
 
   def add_speed(speed)
@@ -63,7 +60,7 @@ class Train
   end
 
   def previous_station
-    return @route.stations[@current_station_index - 1] if (@current_station_index - 1).positive?
+    @route.stations[@current_station_index - 1] if (@current_station_index - 1).positive?
   end
 
   def current_station
@@ -96,11 +93,5 @@ class Train
 
   def train_is_standing?
     @speed.zero?
-  end
-
-  NUMBER_FORMAT = /^[а-яa-z0-9]{3}-?[a-z0-9]{2}$/i.freeze
-
-  def validate!
-    raise 'Не корректный номер поезда' unless NUMBER_FORMAT.match?(@number)
   end
 end

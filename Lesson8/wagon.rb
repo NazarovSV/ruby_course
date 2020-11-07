@@ -1,14 +1,19 @@
 # frozen_string_literal: true
 
 require_relative 'producer'
+require_relative 'validation'
 
 class Wagon
   include Producer
+  include Validation
+
+  validate :number, :format, /^.{6}$/i.freeze
 
   def initialize(number, space)
-    @space = space
+    #self.space = space
+    #validate!
     @free_space = space
-    @number = number
+    self.number = number
   end
 
   def take_volume(space)

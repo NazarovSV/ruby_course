@@ -12,6 +12,12 @@ domodedovo = Station.new 'Домодедово'
 mihnevo = Station.new 'Михнево'
 kievskay = Station.new 'Киевская'
 
+chertanovo.name = 'Ясенево'
+chertanovo.name = 'Борисоглебск'
+chertanovo.name = 'Чертаново'
+
+puts chertanovo.name_history.inspect
+
 route = Route.new mihnevo, kievskay
 
 route.add_station chertanovo, 1
@@ -20,10 +26,39 @@ route.add_station domodedovo, 1
 cargo_wagon_first = CargoWagon.new 'A333', 10.5
 cargo_wagon_second = CargoWagon.new 'A334', 13.0
 
+begin
+  CargoWagon.new 'A335', 10
+rescue StandardError => e
+  puts e.message
+end
+
 passenger_wagon_first = PassengerWagon.new 'П1-909', 10
 passenger_wagon_second = PassengerWagon.new 'П1-910', 15
 passenger_wagon_third = PassengerWagon.new 'П1-911', 20
 passenger_wagon_fourth = PassengerWagon.new 'П1-923', 25
+
+#вагон валиден
+puts "Вагон #{passenger_wagon_fourth.number} валиден - #{passenger_wagon_fourth.valid?}"
+
+passenger_wagon_test = PassengerWagon.new '1234567', 0
+
+#вагон не валиден
+puts "Вагон #{passenger_wagon_test.number} валиден - #{passenger_wagon_test.valid?}"
+
+#проверка на тип вагона - не пройдет
+begin
+  PassengerWagon.new 'П1-924', 10.4
+rescue StandardError => e
+  puts e.message
+end
+
+#проверка на номер поезда - не пройдет
+begin
+  passenger_train_zero = PassengerTrain.new 'r111-bd'
+rescue StandardError => e
+  # puts e.backtrace
+  puts e.message
+end
 
 passenger_train_first = PassengerTrain.new '111-bd'
 passenger_train_second = PassengerTrain.new 'eee-ce'
@@ -31,9 +66,25 @@ cargo_train = CargoTrain.new 'aaa-00'
 
 passenger_train_first.attach_a_wagon passenger_wagon_first
 2.times { passenger_wagon_first.take_volume }
+
+#проверка на тип добавляемого вагона - не пройдет
+begin
+  passenger_train_first.attach_a_wagon cargo_wagon_first
+rescue StandardError => e
+  # puts e.backtrace
+  puts e.message
+end
+
 passenger_train_first.attach_a_wagon passenger_wagon_second
 10.times { passenger_wagon_second.take_volume }
 passenger_train_first.attach_a_wagon passenger_wagon_third
+
+#проверка на тип добавляемого вагона - не пройдет
+begin
+  passenger_train_first.detach_a_wagon cargo_wagon_first
+rescue StandardError => e
+  puts e.message
+end
 
 passenger_train_second.attach_a_wagon passenger_wagon_fourth
 25.times { passenger_wagon_fourth.take_volume }

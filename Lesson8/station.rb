@@ -1,35 +1,43 @@
 # frozen_string_literal: true
 
 require_relative 'instance_counter'
+require_relative 'validation'
+require_relative 'accessors'
+require_relative 'train'
 
 class Station
   include InstanceCounter
+  include Validation
+  extend Accessors
 
   @@stations = []
 
-  attr_reader :name, :trains
+  # validate :name, :type, String
+  attr_accessor_with_history :name
+  strong_attr_accessor :name, String
+
+  attr_reader :trains
 
   def initialize(name)
-    @name = name
+    self.name = name
     @trains = []
     validate!
     @@stations.push self
     register_instance
   end
 
+  # def name=(value)
+  #   puts self.methods
+  #   super value
+  # end
+
   def execute_block(&block)
     @trains.each { |train| block.call train }
   end
 
-  def valid?
-    validate!
-    true
-  rescue StandardError
-    false
-  end
-
   def add_train_for_station(train)
-    validate_train_type! train
+    self.train = train
+    validate!
     @trains.push train
   end
 
@@ -38,7 +46,7 @@ class Station
   end
 
   def trains_by_type(type)
-    validate_train_type! type
+    self.train_type = type
     @trains.count { |train| train.is_a? type }
   end
 
@@ -46,13 +54,6 @@ class Station
     @@stations
   end
 
-  private
-
-  def validate!
-    raise 'Название станции должно быть типа string' unless @name.is_a? String
-  end
-
-  def validate_train_type!(type)
-    raise 'Tип не является наследником типа Train' unless type.is_a? Train
-  end
+  validate :train, :type, Train
+  validate :train_type, :type, Train
 end

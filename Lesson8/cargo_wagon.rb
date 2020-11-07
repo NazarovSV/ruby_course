@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
 require_relative 'wagon'
+require_relative 'validation'
 
 class CargoWagon < Wagon
   def initialize(number, space)
-    super number, space
-    validate!
+    self.space = space
+    super number, @space
   end
 
-  def validate!
-    raise 'Объем должен быть плавающим числом!' unless @space.is_a? Float
-  end
+  validate :space, :type, Float
 end
